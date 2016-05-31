@@ -401,18 +401,73 @@ on small devices, paste the mobile query code up in the buttons section and styl
 there.
 */
 
+@media(max-width: 750px){
+  button
+  {
+    width: 100%;
+  }
+}
 
 /* Larger than mobile */
-@media (min-width: 400px) {}
+@media (min-width: 300px){
+#sy
+{
+  display: none;
+}
+
+#sy-mobile
+{
+  display: inline;
+}
+
+#seconds, #separator, #minutes
+{
+  font-size: 7rem;
+}  
+
+#l25, #l20, #l10, #l5, #lloop
+{
+  font-size: 1.2rem;
+}
+
+}
 
 /* Larger than phablet (also point when grid becomes active) */
-@media (min-width: 550px) {}
+@media (min-width: 550px) {
+}
 
 /* Larger than tablet */
-@media (min-width: 750px) {}
+@media (min-width: 750px) {
+
+
+}
 
 /* Larger than desktop */
-@media (min-width: 1000px) {}
+@media (min-width: 1000px) {
+
+  #sy
+{
+  display: inline;
+}
+
+#sy-mobile
+{
+  display: none;
+}
+
+#seconds, #separator, #minutes
+{
+  font-size: 10rem;
+}  
+
+#l25, #l20, #l10, #l5, #lloop
+{
+  font-size: 1.6rem;
+}
+
+}
+
+}
 
 /* Larger than Desktop HD */
 @media (min-width: 1200px) {}
