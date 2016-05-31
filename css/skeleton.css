@@ -422,12 +422,20 @@ there.
 
 #seconds, #separator, #minutes
 {
+<<<<<<< HEAD
   font-size: 75px;
+=======
+  font-size: 7rem;
+>>>>>>> 9031baa896112256c114b1e8d987e6f78f47a2c7
 }  
 
 #l25, #l20, #l10, #l5, #lloop
 {
+<<<<<<< HEAD
   font-size: 13px;
+=======
+  font-size: 1.2rem;
+>>>>>>> 9031baa896112256c114b1e8d987e6f78f47a2c7
 }
 
 }
@@ -457,12 +465,20 @@ there.
 
 #seconds, #separator, #minutes
 {
+<<<<<<< HEAD
   font-size: 100px;
+=======
+  font-size: 10rem;
+>>>>>>> 9031baa896112256c114b1e8d987e6f78f47a2c7
 }  
 
 #l25, #l20, #l10, #l5, #lloop
 {
+<<<<<<< HEAD
   font-size: 15px;
+=======
+  font-size: 1.6rem;
+>>>>>>> 9031baa896112256c114b1e8d987e6f78f47a2c7
 }
 
 }
