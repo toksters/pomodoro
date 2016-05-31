@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Pomodoro Timer</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<!--   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> -->
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <style>
+  @font-face {
+    font-family: Gotham;
+    src: url(gotham.otf);
+}
+    html, body {
+      height: 100%;
+      background-color: #D6EC8E;
+      color: #876262;
+      font-family: "Gotham", "ClearSan-Light", "san-serif";
+    }
+
+    .table-container {
+      display: table;
+      height: 100%;
+      width: 100%;
+    }
+
+    .table-block {
+      display: table-row;
+      height: 1px;
+    }
+
+    .footer-push {
+      height: auto;
+    }
+
+    #footer {
+      text-align: center;
+    }
+
+    select
+    {
+      font-size: 40px;
+      width: 100px;
+      height: 50px;
+      color: gray;
+    }
+
+    #start
+    {
+      border: none; background-color:#66a93c; color: white;
+    }
+
+    #start:hover
+    {
+      background-color: #6c8e40;
+    }
+
+    #stop
+    {
+      border: none; background-color:#d45454; color: white;
+    }
+
+    #stop:hover
+    {
+      background-color: #a85551;
+    }
+
+
+  </style>
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<!--   <link rel="icon" type="image/png" href="images/favicon.png"> -->
+
+
+</head>
+<body>
+  <div class="table-container">
+    <div class="table-block footer-push">
+
+      <!-- Primary Page Layout
+           –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+      <div class="container">
+
+      <div class="row" style="text-align: center">
+        <div class="two columns">
+          <p></p>
+            <!-- Filler --> 
+        </div><!-- Filler-->
+        <div class="eight columns" style="margin-top: 5%; color: #876262">
+          <h2>Tomato Timer! <span style="font-size: 17px">for Soon Young</span></h2>
+
+          <form>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="25"value="25"> <span class="label-body" style="padding-right: 2%">25 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="20" value="20" checked> <span class="label-body" style="padding-right: 2%">20 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="10" value="10"> <span class="label-body" style="padding-right: 2%">10 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="5" value="5"> <span class="label-body" style="padding-right: 2%">5 min</span>
+          </form>
+
+          <div class="row">
+            <div class="two columns">
+              <p></p>
+              <!-- FILLER -->
+            </div>
+            <div class="eight columns">
+              <form>
+                  <input type="checkbox" name="loop" id="loopCheck" value="yes" onclick="loopFlip()" checked><span class="label-body" style="padding-left: 2%; font-size: 20px">Loop</span></input>
+              </form>
+            </div>
+        </div>
+
+        <div class="row" id="time" style="margin-top: 0%; margin-bottom: 3%; font-size: 95px">
+            <span id="minutes">20</span> <span>:</span> <span id="seconds">00</span>
+        </div> <!-- time row end-->
+
+        <div class="row">
+          <div class="three columns">
+            <p></p>
+            <!-- Filler!-->
+          </div>
+          <div class=" six columns">
+            <button id="start" onclick="startTimer()">START</button>
+            <button id="stop" onclick="stopTimer()">STOP</button>
+          </div>
+        </div><!--row end-->
+
+        <div class="row">
+          <div class="ten columns">
+            <audio id="sound"src="Dinner-bell-sound.mp3"></audio>
+          </div>
+        </div>
+
+      </div>
+    </div> <!-- row end-->
+
+      </div>  <!-- end primary div.container -->
+    </div> <!-- end primary div.table-block -->
+
+
+    <div class="table-block" style="background-color: #876262; height: 12%;">
+      <!-- Page Footer Layout
+           ––––––––––––––––––––––––––––––– ––––––––––––––––––– -->
+      <div class="container" style="padding: 1%">
+        <footer id="footer" class="twelve columns">
+        </footer>
+      </div> <!-- end footer div.container -->
+    </div>  <!-- end footer div.table-block -->
+  </div>
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+ <!-- Javascript-->
+  <script>
+    var seconds;
+    var minutes;
+
+    var timer;
+    var on = false;
+
+    var loopOn;
+
+    var minLoop; //number of minutes that is looped
+
+    function loopFlip()//turns loop on or off
+    {
+      loopOn = document.getElementById("loopCheck").checked;
+      console.log("Loop is set to "+ loopOn);
+    }
+
+  function setTime(value)
+  {
+    console.log("the value is: " + value);
+    minutes = value;
+    minLoop = value; //save in case the user wants to loop
+
+    seconds = 0;
+    updateTimer();
+  }
+
+    function startTimer()
+    {
+      if(!on)
+      {
+        on = true;
+        minutes = document.getElementById("minutes").innerHTML;
+        seconds = document.getElementById("seconds").innerHTML;;
+        timer = setInterval("tick()", 1000);
+      }
+    }
+
+    function tick()
+    {
+      console.log("tick() was called!");
+      
+      if(seconds == 0 && minutes == 0)
+      {
+        document.getElementById('sound').play();
+        console.log("The inner HTML should change...");
+
+        if(loopOn)
+        {
+
+            minutes = minLoop;
+            seconds = 0;
+        }
+        else
+        {
+            stopTimer();
+        }
+
+      }
+      else if(seconds == 0 && minutes >= 1)
+      {
+        seconds = 59;
+        minutes -=1;
+      }
+      else
+      {
+        seconds -= 1;
+      }
+
+      updateTimer();
+    }
+
+    function stopTimer()
+    {
+      clearTimeout(timer);
+      on = false;
+    }
+
+    function updateTimer()
+    {
+      if(seconds < 10 && minutes >= 10)
+      {
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = "0" + seconds;
+      }
+      else if (minutes<10 && seconds >= 10)
+      {
+        document.getElementById("minutes").innerHTML = "0" + minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+      }
+      else if(minutes < 10 && seconds <10)
+      {
+        document.getElementById("minutes").innerHTML = "0" + minutes;
+        document.getElementById("seconds").innerHTML = "0" + seconds;
+      }
+      else
+      {
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
