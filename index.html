@@ -104,29 +104,20 @@
             <!-- Filler --> 
         </div><!-- Filler-->
         <div class="eight columns" style="margin-top: 5%; color: #876262">
-          <h2>Tomato Timer! <span style="font-size: 17px">for Soon Young</span></h2>
+          <h2>Tomato Timer! <span id="sy" style="font-size: 17px">for Soon Young</span> <span style="font-size: 15px" id="sy-mobile">For SY</span></h2>
 
           <form>
-                <input type="radio" onclick="setTime(value)" name="timeAmount" id="25"value="25"> <span class="label-body" style="padding-right: 2%">25 min</span>
-                <input type="radio" onclick="setTime(value)" name="timeAmount" id="20" value="20" checked> <span class="label-body" style="padding-right: 2%">20 min</span>
-                <input type="radio" onclick="setTime(value)" name="timeAmount" id="10" value="10"> <span class="label-body" style="padding-right: 2%">10 min</span>
-                <input type="radio" onclick="setTime(value)" name="timeAmount" id="5" value="5"> <span class="label-body" style="padding-right: 2%">5 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="25"value="25"> <span class="label-body" id="l25" style="padding-right: 2%">25 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="20" value="20" checked> <span class="label-body" id="l20" style="padding-right: 2%">20 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="10" value="10"> <span class="label-body" id="l10"style="padding-right: 2%">10 min</span>
+                <input type="radio" onclick="setTime(value)" name="timeAmount" id="5" value="5"> <span class="label-body" id="l5" style="padding-right: 2%">5 min</span> <br>
+
+
+                  <input type="checkbox" name="loop" id="loopCheck" value="yes" onclick="loopFlip()" checked><span class="label-body" id="lloop" style="padding-left: 2%;">Loop</span></input>
           </form>
 
-          <div class="row">
-            <div class="two columns">
-              <p></p>
-              <!-- FILLER -->
-            </div>
-            <div class="eight columns">
-              <form>
-                  <input type="checkbox" name="loop" id="loopCheck" value="yes" onclick="loopFlip()" checked><span class="label-body" style="padding-left: 2%; font-size: 20px">Loop</span></input>
-              </form>
-            </div>
-        </div>
-
         <div class="row" id="time" style="margin-top: 0%; margin-bottom: 3%; font-size: 95px">
-            <span id="minutes">20</span> <span>:</span> <span id="seconds">00</span>
+            <span id="minutes">20</span> <span id="separator">:</span> <span id="seconds">00</span>
         </div> <!-- time row end-->
 
         <div class="row">
@@ -167,15 +158,18 @@
 
  <!-- Javascript-->
   <script>
-    var seconds;
-    var minutes;
+    var seconds = 0; //default
+    var minutes = 20; // default
 
     var timer;
     var on = false;
 
-    var loopOn;
+    var resume = false; // if the user stops the timer before it ends
 
-    var minLoop; //number of minutes that is looped
+    var loopOn = true; //default
+
+    var minLoop = 20; //number of minutes that is looped; 20 is default
+
 
     function loopFlip()//turns loop on or off
     {
@@ -190,7 +184,12 @@
     minLoop = value; //save in case the user wants to loop
 
     seconds = 0;
+    resume = false; //reset timer
     updateTimer();
+
+
+    console.log("Minutes is: "+ minutes);
+    console.log("seconds is: "+ seconds);
   }
 
     function startTimer()
@@ -198,9 +197,20 @@
       if(!on)
       {
         on = true;
-        minutes = document.getElementById("minutes").innerHTML;
-        seconds = document.getElementById("seconds").innerHTML;;
+        // if(resume == false)
+        // {
+        //   minutes = document.getElementById("minutes").innerHTML;
+        //   seconds = document.getElementById("seconds").innerHTML;
+        // }
+
+        if(seconds > 0 && (minutes != 25 || minutes != 20 || minutes != 10 || minutes != 5))//the timer is in the middle of it, and user stopped the timer
+        {
+          console.log("The user stopped the timer in the middle.");
+          resume = true;
+        }
+
         timer = setInterval("tick()", 1000);
+
       }
     }
 
@@ -222,6 +232,7 @@
         else
         {
             stopTimer();
+            resume = false; //timer ended
         }
 
       }
@@ -238,16 +249,30 @@
       updateTimer();
     }
 
+    //stopTimer runs in two places
+    // 1. the button -> that you've stopped in in the middle of the timer; resume is true
+    // 2. when the timer stops on its own; resume is false
+
     function stopTimer()
     {
       clearTimeout(timer);
       on = false;
+
+      resume = true;
     }
 
     function updateTimer()
     {
+      if(resume == true && seconds >= 10)//don't need to add zeros
+      {
+        console.log("minutes in resume == true is :" + minutes);
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+      }
+
       if(seconds < 10 && minutes >= 10)
       {
+        console.log("minutes is " + minutes);
         document.getElementById("minutes").innerHTML = minutes;
         document.getElementById("seconds").innerHTML = "0" + seconds;
       }
