@@ -158,11 +158,14 @@
 
  <!-- Javascript-->
   <script>
+    var baseSecs = 20*60;
     var seconds = 0; //default
     var minutes = 20; // default
 
     var timer;
     var on = false;
+    
+    var startTime;
 
     var resume = false; // if the user stops the timer before it ends
 
@@ -182,6 +185,7 @@
     console.log("the value is: " + value);
     minutes = value;
     minLoop = value; //save in case the user wants to loop
+    baseSecs = minutes*60;
 
     seconds = 0;
     resume = false; //reset timer
@@ -191,6 +195,24 @@
     console.log("Minutes is: "+ minutes);
     console.log("seconds is: "+ seconds);
   }
+
+    function ring(){
+        document.getElementById('sound').play();
+        console.log("The inner HTML should change...");
+
+        if(loopOn)
+        {
+
+            minutes = minLoop;
+            seconds = 0;
+        }
+        else
+        {
+            stopTimer();
+            resume = false; //timer ended
+        }
+
+    }
 
     function startTimer()
     {
@@ -208,34 +230,34 @@
           console.log("The user stopped the timer in the middle.");
           resume = true;
         }
-
-        timer = setInterval("tick()", 1000);
-
+        startTime = new Date().getTime();
+        timer = setInterval("tick()", 500);
+        
       }
     }
 
     function tick()
     {
       console.log("tick() was called!");
-      
-      if(seconds == 0 && minutes == 0)
+   
+      var currTime = new Date().getTime();
+      var totalSecsElapsed = Math.floor((currTime - startTime)/1000);
+      console.log("totalSecsElapsed: " + totalSecsElapsed); 
+      if((totalSecsElapsed > minutes*60*1000) || seconds == 0 && minutes == 0)
       {
-        document.getElementById('sound').play();
-        console.log("The inner HTML should change...");
-
-        if(loopOn)
-        {
-
-            minutes = minLoop;
-            seconds = 0;
+            ring();
+      } else {
+        var minsLeft = Math.floor((baseSecs - totalSecsElapsed)/60);
+        var secsLeft = (baseSecs % 60)- (totalSecsElapsed % 60);
+        console.log("%: " + (totalSecsElapsed % 60));
+        if(secsLeft < 0){
+            secsLeft = 60 - (totalSecsElapsed % 60);
         }
-        else
-        {
-            stopTimer();
-            resume = false; //timer ended
-        }
-
+        minutes = minsLeft;
+        seconds = secsLeft;      
       }
+      
+      /*
       else if(seconds == 0 && minutes >= 1)
       {
         seconds = 59;
@@ -244,7 +266,7 @@
       else
       {
         seconds -= 1;
-      }
+      }*/
 
       updateTimer();
     }
