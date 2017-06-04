@@ -166,6 +166,10 @@
     var on = false;
     
     var startTime;
+    
+    var secsElapsed = 0;
+
+    var prePauseTime = 0;
 
     var resume = false; // if the user stops the timer before it ends
 
@@ -189,9 +193,10 @@
 
     seconds = 0;
     resume = false; //reset timer
+    secsElapsed = 0;
     stopTimer();
     updateTimer();
-
+    prePauseTime = 0;
 
     console.log("Minutes is: "+ minutes);
     console.log("seconds is: "+ seconds);
@@ -230,7 +235,7 @@
         {
           console.log("The user stopped the timer in the middle.");
           resume = true;
-        }
+        } 
         startTime = new Date().getTime();
         timer = setInterval("tick()", 500);
         
@@ -242,17 +247,17 @@
       console.log("tick() was called!");
    
       var currTime = new Date().getTime();
-      var totalSecsElapsed = Math.floor((currTime - startTime)/1000);
-      console.log("totalSecsElapsed: " + totalSecsElapsed); 
-      if((totalSecsElapsed > minutes*60*1000) || seconds == 0 && minutes == 0)
+      secsElapsed = Math.floor((currTime - startTime)/1000) + prePauseTime;
+      console.log("secsElapsed: " + secsElapsed); 
+      if((secsElapsed > minutes*60*1000) || seconds == 0 && minutes == 0)
       {
             ring();
       } else {
-        var minsLeft = Math.floor((baseSecs - totalSecsElapsed)/60);
-        var secsLeft = (baseSecs % 60)- (totalSecsElapsed % 60);
-        console.log("%: " + (totalSecsElapsed % 60));
+        var minsLeft = Math.floor((baseSecs - secsElapsed)/60);
+        var secsLeft = (baseSecs % 60)- (secsElapsed % 60);
+        console.log("%: " + (secsElapsed % 60));
         if(secsLeft < 0){
-            secsLeft = 60 - (totalSecsElapsed % 60);
+            secsLeft = 60 - (secsElapsed % 60);
         }
         minutes = minsLeft;
         seconds = secsLeft;      
@@ -282,6 +287,7 @@
       on = false;
 
       resume = true;
+      prePauseTime = Math.floor((new Date().getTime() - startTime)/1000) + prePauseTime; 
     }
 
     function updateTimer()
