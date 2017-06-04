@@ -166,7 +166,7 @@
     var on = false;
     
     var startTime;
-    
+    var setting = 20; 
     var secsElapsed = 0;
 
     var prePauseTime = 0;
@@ -187,8 +187,10 @@
   function setTime(value)
   {
     console.log("the value is: " + value);
+    setting = value;
     minutes = value;
     minLoop = value; //save in case the user wants to loop
+   
     baseSecs = minutes*60;
 
     seconds = 0;
@@ -216,6 +218,10 @@
         {
             stopTimer();
             resume = false; //timer ended
+            clearInterval(timer);
+            prePauseTime = 0;
+            setTime(setting);         
+            
         }
 
     }
@@ -248,10 +254,11 @@
    
       var currTime = new Date().getTime();
       secsElapsed = Math.floor((currTime - startTime)/1000) + prePauseTime;
-      console.log("secsElapsed: " + secsElapsed); 
-      if((secsElapsed > minutes*60*1000) || seconds == 0 && minutes == 0)
+      console.log("secsElapsed: " + secsElapsed + " m:s - " + minutes + ":" + seconds); 
+      if((minutes <= 0 && seconds <= 0))
       {
             ring();
+            clearInterval(timer);
       } else {
         var minsLeft = Math.floor((baseSecs - secsElapsed)/60);
         var secsLeft = (baseSecs % 60)- (secsElapsed % 60);
@@ -283,11 +290,13 @@
 
     function stopTimer()
     {
-      clearTimeout(timer);
-      on = false;
+        if(on){
+          clearInterval(timer);
+          on = false;
 
-      resume = true;
-      prePauseTime = Math.floor((new Date().getTime() - startTime)/1000) + prePauseTime; 
+          resume = true;
+          prePauseTime = Math.floor((new Date().getTime() - startTime)/1000) + prePauseTime; 
+        }
     }
 
     function updateTimer()
